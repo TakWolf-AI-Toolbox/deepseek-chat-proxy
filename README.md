@@ -1,6 +1,6 @@
 # DeepSeek Chat Proxy
 
-通过 Chrome 扩展模拟用户操作，实现免费使用网页版 DeepSeek Chat（https://chat.deepseek.com/）。
+通过 Chrome 扩展模拟用户操作，实现免费使用网页版 [DeepSeek Chat](https://chat.deepseek.com/)。
 
 ## 架构
 
@@ -71,7 +71,7 @@ cd proxy-server && npm start
 
 ### 4. 打开 DeepSeek 网页
 
-在 Chrome 中访问 https://chat.deepseek.com/，确保扩展已成功注入。
+在 Chrome 中访问 https://chat.deepseek.com/ ，确保扩展已成功注入。
 
 ### 5. 启动 CLI
 
