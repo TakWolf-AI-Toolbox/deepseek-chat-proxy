@@ -44,6 +44,8 @@ CLI 接收 SSE 流式响应              DeepSeek 网页（chat.deepseek.com）
 - HTTP 客户端
 - 发送用户消息（`POST /api/chat/stream`），接收 AI 响应（SSE 流式）
 - 支持多轮对话（通过 sessionId 维持会话上下文）
+- **Agent 模式**：新对话时自动注入工具上下文，支持执行命令、读取文件、列出目录
+- 工具调用采用 `<<tool_call>>tool_name|args<</tool_call>>` 格式
 
 ## 快速开始
 
@@ -81,6 +83,25 @@ CLI 命令：
 - `quit` — 退出
 - `clear` — 重置会话
 - `session` — 查看当前 sessionId
+
+## Agent 模式
+
+CLI 内置 Agent 能力，可以执行命令和访问文件系统。
+
+### 可用工具
+
+| 工具 | 说明 | 示例 |
+|------|------|------|
+| `execute` | 执行 shell 命令 | `<<tool_call>>execute\|ls -la /tmp<</tool_call>>` |
+| `read_file` | 读取文件内容 | `<<tool_call>>read_file\|/etc/hosts<</tool_call>>` |
+| `ls` | 列出目录内容 | `<<tool_call>>ls\|/tmp<</tool_call>>` |
+
+### 工作原理
+
+1. 新对话时，CLI 自动在第一条消息前注入 Agent 上下文
+2. AI 响应中的工具调用会被解析执行
+3. 执行结果作为新消息发送，AI 继续响应
+4. 最多迭代 10 轮
 
 ## API
 
