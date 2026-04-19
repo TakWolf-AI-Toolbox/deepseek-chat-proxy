@@ -1,0 +1,14 @@
+{
+  "name": "deepseek-chat-proxy-server",
+  "version": "1.0.0",
+  "description": "DeepSeek Chat Proxy Server",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "dependencies": {
+    "ws": "^8.14.2"
+  }
+}

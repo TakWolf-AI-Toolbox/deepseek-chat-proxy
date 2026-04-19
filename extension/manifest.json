@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "DeepSeek Proxy",
+  "version": "1.0.0",
+  "description": "Browser extension for DeepSeek proxy",
+  "permissions": ["activeTab", "scripting"],
+  "host_permissions": ["*://chat.deepseek.com/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [{
+    "matches": ["*://chat.deepseek.com/*"],
+    "js": ["content.js"],
+    "run_at": "document_idle"
+  }],
+  "action": {
+    "default_title": "DeepSeek Proxy"
+  }
+}
