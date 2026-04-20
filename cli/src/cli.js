@@ -200,7 +200,7 @@ async function sendMessage(sessionId, message) {
 async function handleUserMessage(sessionId, userMessage) {
   let currentSessionId = sessionId;
   let conversationHistory = [];
-  let maxIterations = 10;
+  let maxIterations = 1000;
   let iteration = 0;
 
   while (iteration < maxIterations) {
