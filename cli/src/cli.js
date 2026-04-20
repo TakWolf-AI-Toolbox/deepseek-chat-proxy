@@ -29,8 +29,8 @@ List directory contents.
 Usage: ls|path to directory (e.g., ls|/tmp)
 
 ### write_file
-Write content to a file.
-Usage: write_file|path to file|content (e.g., write_file|/tmp/test.txt|Hello World)
+Write content to a file. Content should be base64 encoded.
+Usage: write_file|path to file|base64:content (e.g., write_file|/tmp/test.txt|base64:SGVsbG8gV29ybGQ=)
 
 ## Important Rules
 
@@ -125,7 +125,17 @@ async function executeTool(name, args) {
         return { success: false, error: 'write_file requires path|content format' };
       }
       const path = args.slice(0, sepIndex);
-      const content = args.slice(sepIndex + 1);
+      const contentPart = args.slice(sepIndex + 1);
+      let content;
+      if (contentPart.startsWith('base64:')) {
+        try {
+          content = Buffer.from(contentPart.slice(7), 'base64').toString('utf-8');
+        } catch {
+          return { success: false, error: 'Invalid base64 content' };
+        }
+      } else {
+        content = contentPart;
+      }
       return await writeFileTool(path, content);
     }
     default:
