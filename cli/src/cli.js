@@ -2,7 +2,7 @@
 
 import readline from 'readline';
 import { spawn } from 'child_process';
-import { readFile, readdir, stat } from 'fs/promises';
+import { readFile, writeFile, readdir, stat } from 'fs/promises';
 import { join } from 'path';
 
 const API_BASE = 'http://localhost:12500';
@@ -28,12 +28,17 @@ Usage: read_file|path to file (e.g., read_file|/etc/hosts)
 List directory contents.
 Usage: ls|path to directory (e.g., ls|/tmp)
 
+### write_file
+Write content to a file.
+Usage: write_file|path to file|content (e.g., write_file|/tmp/test.txt|Hello World)
+
 ## Important Rules
 
 1. When you need to run a shell command, use the execute tool
 2. When you need to read a file, use the read_file tool
-3. When you need to list a directory, use the ls tool
-4. Always respond with tool calls wrapped in <<tool_call>>tool_name|args<</tool_call>> format
+3. When you need to write a file, use the write_file tool
+4. When you need to list a directory, use the ls tool
+5. Always respond with tool calls wrapped in <<tool_call>>tool_name|args<</tool_call>> format
 5. After receiving tool results, incorporate them into your response
 6. Do not pretend to execute commands - actually use the tools
 
@@ -97,6 +102,15 @@ async function listDir(path) {
   }
 }
 
+async function writeFileTool(path, content) {
+  try {
+    await writeFile(path, content, 'utf-8');
+    return { success: true, path };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+}
+
 async function executeTool(name, args) {
   switch (name) {
     case 'execute':
@@ -105,6 +119,15 @@ async function executeTool(name, args) {
       return await readFileTool(args);
     case 'ls':
       return await listDir(args || '.');
+    case 'write_file': {
+      const sepIndex = args.indexOf('|');
+      if (sepIndex === -1) {
+        return { success: false, error: 'write_file requires path|content format' };
+      }
+      const path = args.slice(0, sepIndex);
+      const content = args.slice(sepIndex + 1);
+      return await writeFileTool(path, content);
+    }
     default:
       return { success: false, error: `Unknown tool: ${name}` };
   }
